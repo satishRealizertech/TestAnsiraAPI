@@ -22,7 +22,7 @@ namespace BPAClassLibrary.Model
     {
         public int BackbonePageId { get; set; }
         public int PageId { get; set; }
-        public string PageName { get; set; }
+        public string PageType { get; set; }
         public int BackboneId { get; set; }
         public string BackboneName { get; set; }
         public string CreatedBy { get; set; }

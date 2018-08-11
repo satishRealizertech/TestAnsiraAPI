@@ -34,6 +34,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Data\BPA\Repositories\BPA\BPA.Core\bin\Debug\BPA.Core.dll</HintPath>
     </Reference>
+    <Reference Include="BPA.Database">
+      <HintPath>C:\Data\BPA\Repositories\BPA\BPA.Database\bin\Debug\BPA.Database.dll</HintPath>
+    </Reference>
     <Reference Include="BPA.Services, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Data\BPA\Repositories\BPA\BPA.Services\bin\Debug\BPA.Services.dll</HintPath>

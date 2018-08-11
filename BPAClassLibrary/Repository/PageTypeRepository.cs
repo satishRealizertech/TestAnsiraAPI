@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using BPAClassLibrary.Interface;
 using BPAClassLibrary.Model;
 using System.Data;
+using BPA.Services;
+using System.Collections.Specialized;
 
 namespace BPAClassLibrary.Repository
 {
@@ -15,205 +17,77 @@ namespace BPAClassLibrary.Repository
     {
         public List<PageTypes> GetPageType()
         {
-            //List<BackboneIdentifier> listBackboneIdentifier = DataAccess.ExecuteSQLGetList<BackboneIdentifier>(DataAccess.ConnectionStrings.Ansira, "select * from BackboneIdentifiers");
-            List<PageTypes> listPageTypes= new List<PageTypes>();
-            try
-            {
-                using (var sqlconnection = new SqlConnection(ConfigurationManager.ConnectionStrings["Ansira"].ConnectionString))
-                {
-                    sqlconnection.Open();
-                    SqlCommand cmd = new SqlCommand("GetAllPageTypes", sqlconnection);
-                    SqlDataReader sdr = cmd.ExecuteReader();
-                    if (sdr.HasRows)
-                    {
-                        while (sdr.Read())
-                        {
-                            PageTypes backboneIdentifierdata = new PageTypes();
-                            backboneIdentifierdata.PageId = Convert.ToInt32(sdr["PageId"].ToString());
-                            backboneIdentifierdata.PageType = sdr["PageType"].ToString();
-                            backboneIdentifierdata.IsActive = Convert.ToBoolean(sdr["IsActive"]);
-                            listPageTypes.Add(backboneIdentifierdata);
-                        }
-                    }
-                    sqlconnection.Close();
-                }
-            }
-            catch (Exception ex)
-            {
-            }
+            List<PageTypes> listPageTypes = DataAccess.ExecuteSPGetList<PageTypes>(DataAccess.ConnectionStrings.Ansira, "GetAllPageTypes");            
             return listPageTypes;
         }
 
         public bool CreatePageType(PageTypes pageTypeData)
         {
-            var result = 0;
-            try
-            {
-                using (var sqlconnection = new SqlConnection(ConfigurationManager.ConnectionStrings["Ansira"].ConnectionString))
-                {
-                    sqlconnection.Open();
-                    SqlCommand cmd = new SqlCommand("Insert into PageType (PageType,IsActive) values (@PageType,@IsActive)", sqlconnection);
-                    cmd.Parameters.Add(new SqlParameter("@PageType", pageTypeData.PageType));
-                    //cmd.Parameters.Add(new SqlParameter("@CreatedBy", pageTypeData.CreatedBy));
-                    //cmd.Parameters.Add(new SqlParameter("@CreateTs", pageTypeData.CreatedTs));
-                    cmd.Parameters.Add(new SqlParameter("@IsActive", true));
-                    result = cmd.ExecuteNonQuery();
-                    sqlconnection.Close();
-                }
-            }
-            catch (Exception ex)
-            {
-
-            }
-            return Convert.ToBoolean(result);
+            //List Dictionary object for parameters of Store procedure
+            ListDictionary param = new ListDictionary();
+            param.Add("PageType", pageTypeData.PageType);
+            param.Add("CreatedBy", pageTypeData.CreatedBy);
+            param.Add("UpdatedBy", pageTypeData.UpdateBy);
+            param.Add("CreateTs", null);
+            param.Add("UpdateTs", null);
+            int Id = DataAccess.ExecuteSPNonQuery(DataAccess.ConnectionStrings.Ansira, "CreatePageType", param);
+            return Convert.ToBoolean(Id);
         }
 
         public bool UpdatePageType(PageTypes pageTypeData)
         {
-            bool result = false;
-            try
-            {
-                using (var sqlconnection = new SqlConnection(ConfigurationManager.ConnectionStrings["Ansira"].ConnectionString))
-                {
-                    sqlconnection.Open();
-                    SqlCommand cmd = new SqlCommand("update PageType set PageType=@PageType where PageId=@PageId", sqlconnection);
-                    cmd.Parameters.Add(new SqlParameter("@PageId", pageTypeData.PageId));
-                    cmd.Parameters.Add(new SqlParameter("@PageType", pageTypeData.PageType));
-                    //cmd.Parameters.Add(new SqlParameter("@UpdatedBy", pageTypeData.CreatedBy));
-                    //cmd.Parameters.Add(new SqlParameter("@UpdateTs", pageTypeData.CreatedTs));
-                    //cmd.Parameters.Add(new SqlParameter("@IsActive", pageTypeData.IsActive));
-                    result = Convert.ToBoolean(cmd.ExecuteNonQuery());
-                    sqlconnection.Close();
-                }
-            }
-            catch (Exception ex)
-            {
-
-            }
-            return result;
+            //List Dictionary object for parameters of Store procedure
+            ListDictionary param = new ListDictionary();
+            param.Add("PageId", pageTypeData.PageId);
+            param.Add("PageType", pageTypeData.PageType);
+            param.Add("UpdatedBy", pageTypeData.UpdateBy);
+            param.Add("IsActive", pageTypeData.IsActive);
+            int Id = DataAccess.ExecuteSPNonQuery(DataAccess.ConnectionStrings.Ansira, "UpdatePageType", param);
+            return Convert.ToBoolean(Id);
         }
         public bool DeletePageType(PageTypes pageTypeData)
         {
-            bool result = false;
-            try
-            {
-                using (var sqlconnection = new SqlConnection(ConfigurationManager.ConnectionStrings["Ansira"].ConnectionString))
-                {
-                    sqlconnection.Open();
-                    SqlCommand cmd = new SqlCommand("Delete from PageType where PageId=@PageId", sqlconnection);
-                    cmd.Parameters.Add(new SqlParameter("@PageId", pageTypeData.PageId));
-                    result = Convert.ToBoolean(cmd.ExecuteNonQuery());
-                    sqlconnection.Close();
-                }
-            }
-            catch (Exception ex)
-            {
-            }
-            return result;
+            ListDictionary param = new ListDictionary();
+            param.Add("PageId", pageTypeData.PageId);
+            int Id = DataAccess.ExecuteSPNonQuery(DataAccess.ConnectionStrings.Ansira, "DeletePageType", param);
+            return Convert.ToBoolean(Id);
         }
 
         public List<BackbonePageType> GetBackbonePageType()
         {
-            List<BackbonePageType> listBackbonePageTypes = new List<BackbonePageType>();
-            try
-            {
-                using (var sqlconnection = new SqlConnection(ConfigurationManager.ConnectionStrings["Ansira"].ConnectionString))
-                {
-                    sqlconnection.Open();
-                    SqlCommand cmd = new SqlCommand("GetAllBackbonePageType", sqlconnection);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    SqlDataReader sdr = cmd.ExecuteReader();
-                    if (sdr.HasRows)
-                    {
-                        while (sdr.Read())
-                        {
-                            BackbonePageType backbonePageType = new BackbonePageType();
-                            backbonePageType.PageId = Convert.ToInt32(sdr["PageId"].ToString());
-                            backbonePageType.BackboneId = Convert.ToInt32(sdr["BackboneId"]);
-                            backbonePageType.BackboneName = sdr["BackboneName"].ToString();
-                            backbonePageType.PageName = sdr["PageType"].ToString();
-                            backbonePageType.BackbonePageId= Convert.ToInt32(sdr["BackbonePageId"]);
-                            backbonePageType.IsActive = Convert.ToBoolean(sdr["IsActive"]);
-                            listBackbonePageTypes.Add(backbonePageType);
-                        }
-                    }
-                    sqlconnection.Close();
-                }
-            }
-            catch (Exception ex)
-            {
-            }
+            List<BackbonePageType> listBackbonePageTypes = DataAccess.ExecuteSPGetList<BackbonePageType>(DataAccess.ConnectionStrings.Ansira, "GetAllBackbonePageType");
             return listBackbonePageTypes;
         }
 
         public bool CreateBackbonePage(BackbonePageType backbonePage)
         {
-            var result = 0;
-            try
-            {
-                using (var sqlconnection = new SqlConnection(ConfigurationManager.ConnectionStrings["Ansira"].ConnectionString))
-                {
-                    sqlconnection.Open();
-                    SqlCommand cmd = new SqlCommand("Insert into BackbonePage (PageId,BackboneId,IsActive) values (@PageId,@BackboneId,@IsActive)", sqlconnection);
-                    cmd.Parameters.Add(new SqlParameter("@PageId", backbonePage.PageId));
-                    cmd.Parameters.Add(new SqlParameter("@BackboneId", backbonePage.BackboneId));
-                    //cmd.Parameters.Add(new SqlParameter("@CreatedBy", pageTypeData.CreatedBy));
-                    //cmd.Parameters.Add(new SqlParameter("@CreateTs", pageTypeData.CreatedTs));
-                    cmd.Parameters.Add(new SqlParameter("@IsActive", true));
-                    result = cmd.ExecuteNonQuery();
-                    sqlconnection.Close();
-                }
-            }
-            catch (Exception ex)
-            {
-
-            }
-            return Convert.ToBoolean(result);
+            //List Dictionary object for parameters of Store procedure
+            ListDictionary param = new ListDictionary();
+            param.Add("PageId", backbonePage.PageId);
+            param.Add("BackboneId", backbonePage.BackboneId);
+            param.Add("CreatedBy", backbonePage.CreatedBy);
+            int res = DataAccess.ExecuteSPNonQuery(DataAccess.ConnectionStrings.Ansira, "CreateBackbonePage",param);
+            return Convert.ToBoolean(res);
         }
 
         public bool UpdateBackbonePage(BackbonePageType backbonePage)
         {
-            bool result = false;
-            try
-            {
-                using (var sqlconnection = new SqlConnection(ConfigurationManager.ConnectionStrings["Ansira"].ConnectionString))
-                {
-                    sqlconnection.Open();
-                    SqlCommand cmd = new SqlCommand("update BackbonePage set PageId=@PageId,BackboneId=@BackboneId where BackbonePageId=@BackbonePageId", sqlconnection);
-                    cmd.Parameters.Add(new SqlParameter("@PageId", backbonePage.PageId));
-                    cmd.Parameters.Add(new SqlParameter("@BackboneId", backbonePage.BackboneId));
-                    cmd.Parameters.Add(new SqlParameter("@BackbonePageId", backbonePage.BackbonePageId));
-                    //cmd.Parameters.Add(new SqlParameter("@UpdatedBy", pageTypeData.CreatedBy));
-                    //cmd.Parameters.Add(new SqlParameter("@UpdateTs", pageTypeData.CreatedTs));
-                    //cmd.Parameters.Add(new SqlParameter("@IsActive", pageTypeData.IsActive));
-                    result = Convert.ToBoolean(cmd.ExecuteNonQuery());
-                    sqlconnection.Close();
-                }
-            }
-            catch (Exception ex)
-            {
-
-            }
-            return result;
+            //List Dictionary object for parameters of Store procedure
+            ListDictionary param = new ListDictionary();
+            param.Add("BackbonePageId", backbonePage.BackbonePageId);
+            param.Add("PageId", backbonePage.PageId);
+            param.Add("BackboneId", backbonePage.BackboneId);
+            param.Add("UpdatedBy", backbonePage.UpdatedBy);
+            param.Add("IsActive", backbonePage.IsActive);
+            int res = DataAccess.ExecuteSPNonQuery(DataAccess.ConnectionStrings.Ansira, "UpdateBackbonePage", param);
+            return Convert.ToBoolean(res);
         }
         public bool DeleteBackbonePage(BackbonePageType backbonePage)
         {
-            bool result = false;
-            try
-            {
-                using (var sqlconnection = new SqlConnection(ConfigurationManager.ConnectionStrings["Ansira"].ConnectionString))
-                {
-                    sqlconnection.Open();
-                    SqlCommand cmd = new SqlCommand("Delete from BackbonePage where BackbonePageId=@BackbonePageId", sqlconnection);
-                    cmd.Parameters.Add(new SqlParameter("@BackbonePageId", backbonePage.BackbonePageId));
-                    result = Convert.ToBoolean(cmd.ExecuteNonQuery());
-                    sqlconnection.Close();
-                }
-            }
-            catch (Exception ex)
-            {
-            }
-            return result;
+            ListDictionary param = new ListDictionary();
+            param.Add("BackbonePageId", backbonePage.BackbonePageId);
+            int res = DataAccess.ExecuteSPNonQuery(DataAccess.ConnectionStrings.Ansira, "DeleteBackbonePage", param);
+            return Convert.ToBoolean(res);
         }
     }
 }

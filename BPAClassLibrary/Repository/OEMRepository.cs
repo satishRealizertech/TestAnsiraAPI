@@ -67,7 +67,7 @@ namespace BPAClassLibrary.Repository
                 using (var sqlconnection = new SqlConnection(ConfigurationManager.ConnectionStrings["Ansira"].ConnectionString))
                 {
                     sqlconnection.Open();
-                    SqlCommand cmd = new SqlCommand("Insert into OEM(OEMName) Values('" + OEM_Data.OEM_Name + "')", sqlconnection);
+                    SqlCommand cmd = new SqlCommand("('" + OEM_Data.OEM_Name + "')", sqlconnection);
                     result=Convert.ToBoolean(cmd.ExecuteNonQuery());
                     sqlconnection.Close();
                 }

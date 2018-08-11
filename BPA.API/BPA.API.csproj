@@ -52,7 +52,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Data\BPA\Repositories\BPA\BPA.Services\bin\Debug\BPA.Services.dll</HintPath>
     </Reference>
-    <Reference Include="BPAClassLibrary">
+    <Reference Include="BPAClassLibrary, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\BPAClassLibrary\bin\Debug\BPAClassLibrary.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
