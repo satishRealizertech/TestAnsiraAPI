@@ -1,7 +1,9 @@
-﻿using BPAClassLibrary.Interface;
+﻿using BPA.Services;
+using BPAClassLibrary.Interface;
 using BPAClassLibrary.Model;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
@@ -16,107 +18,42 @@ namespace BPAClassLibrary.Repository
         public BackbonePageElementResponseModel GetBackbonePageElementList()
         {
             BackbonePageElementResponseModel response = new BackbonePageElementResponseModel();
-            List<BackbonePageElement> listpageelement = new List<BackbonePageElement>();
-            //DataSet ds = DataAccess.ExecuteSQLGetList<Backbone>(DataAccess.ConnectionStrings.Ansira, "");
-            try
-            {
-                using (var sqlconnection = new SqlConnection(ConfigurationManager.ConnectionStrings["Ansira"].ConnectionString))
-                {
-                    sqlconnection.Open();
-                    SqlCommand cmd = new SqlCommand("GetAllBackbonePageElement", sqlconnection);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    SqlDataReader sdr = cmd.ExecuteReader();
-                    if (sdr.HasRows)
-                    {
-                        while (sdr.Read())
-                        {
-                            BackbonePageElement backboneelement = new BackbonePageElement();
-                            backboneelement.BackbonePageElementId = Convert.ToInt32(sdr["BackbonePageElementId"].ToString());
-                            backboneelement.BackbonePageId = Convert.ToInt32(sdr["BackbonePageId"].ToString());
-                            backboneelement.PageType = sdr["PageType"].ToString();
-                            backboneelement.DataElementName= sdr["DataElementName"].ToString();
-                           // backboneelement.BackboneName = sdr["BackboneName"].ToString();
-                            backboneelement.DataElementTypeId = Convert.ToInt32(sdr["DataElementTypeId"].ToString());
-                            listpageelement.Add(backboneelement);
-                        }
-                        response.BackbonePageElementList = listpageelement;
-                        response.Success = "true";
-                    }
-                    sqlconnection.Close();
-                }
-            }
-            catch (Exception ex)
-            {
-                response.Error = ex.Message;
-                response.Success = "false";
-            }
-            return response;
+            response.BackbonePageElementList = DataAccess.ExecuteSQLGetList<BackbonePageElement>(DataAccess.ConnectionStrings.Ansira, "GetAllBackbonePageElement");
+            return response;    
         }
 
         public bool CreateBackbonePageElement(BackbonePageElement backbonepageelement)
         {
-            bool result = false;
-            try
-            {
-                using (var sqlconnection = new SqlConnection(ConfigurationManager.ConnectionStrings["Ansira"].ConnectionString))
-                {
-                    sqlconnection.Open();
-                    SqlCommand cmd = new SqlCommand("Insert into BackbonePageElement (BackbonePageId,DataElementTypeId) values (@BackbonePageId,@DataElementTypeId)", sqlconnection);
-                    cmd.Parameters.Add(new SqlParameter("@BackbonePageId", backbonepageelement.BackbonePageId));
-                    cmd.Parameters.Add(new SqlParameter("@DataElementTypeId", backbonepageelement.DataElementTypeId));
-                    result = Convert.ToBoolean(cmd.ExecuteNonQuery());
-                    sqlconnection.Close();
-                }
-            }
-            catch (Exception ex)
-            {
-                string msg = ex.Message.ToString();
-            }
-            return result;
-        }
+            ListDictionary param = new ListDictionary();
+            param.Add("BackbonePageId", backbonepageelement.BackbonePageId);
+            param.Add("DataElementTypeId", backbonepageelement.DataElementTypeId);
+            param.Add("CreatedBy", backbonepageelement.CreatedBy);
+            param.Add("CreateTs", backbonepageelement.CreateTs);
+            int result = DataAccess.ExecuteSPNonQuery(DataAccess.ConnectionStrings.Ansira, "CreateBackbonePageElement", param);
+            return Convert.ToBoolean(result);
+        
+       
+    }
 
         public bool UpdateBackbonePageElement(BackbonePageElement backbonepageelement)
         {
-            bool result = false;
-            try
-            {
-                using (var sqlconnection = new SqlConnection(ConfigurationManager.ConnectionStrings["Ansira"].ConnectionString))
-                {
-                    sqlconnection.Open();
-                    SqlCommand cmd = new SqlCommand("Update BackbonePageElement set BackbonePageId=@BackbonePageId,DataElementTypeId=@DataElementTypeId where BackbonePageElementId=@BackbonePageElementId", sqlconnection);
-                    cmd.Parameters.Add(new SqlParameter("@BackbonePageId",backbonepageelement.BackbonePageId));
-                    cmd.Parameters.Add(new SqlParameter("@DataElementTypeId", backbonepageelement.DataElementTypeId));
-                    cmd.Parameters.Add(new SqlParameter("@BackbonePageElementId", backbonepageelement.BackbonePageElementId));
-                    result = Convert.ToBoolean(cmd.ExecuteNonQuery());
-                    sqlconnection.Close();
-                }
-            }
-            catch (Exception ex)
-            {
-                string msg = ex.Message.ToString();
-            }
-            return result;
+            ListDictionary param = new ListDictionary();
+            param.Add("BackbonePageElementId", backbonepageelement.BackbonePageElementId);
+            param.Add("BackbonePageId", backbonepageelement.BackbonePageId);
+            param.Add("DataElementTypeId", backbonepageelement.DataElementTypeId);
+            param.Add("UpdatedBy", backbonepageelement.UpdatedBy);
+            param.Add("UpdateTs", backbonepageelement.UpdateTs);
+            // param.Add("IsActive", backbonepageelement.IsActive);
+            int result = DataAccess.ExecuteSPNonQuery(DataAccess.ConnectionStrings.Ansira, "UpdateBackbonePageElement", param);
+            return Convert.ToBoolean(result);
         }
 
         public bool DeleteBackbonePageElement(BackbonePageElement backbonepageelement)
         {
-            bool result = false;
-            try
-            {
-                using (var sqlconnection = new SqlConnection(ConfigurationManager.ConnectionStrings["Ansira"].ConnectionString))
-                {
-                    sqlconnection.Open();
-                    SqlCommand cmd = new SqlCommand("Delete from BackbonePageElement where BackbonePageElementId=@BackbonePageElementId", sqlconnection);
-                    cmd.Parameters.Add(new SqlParameter("@BackbonePageElementId", backbonepageelement.BackbonePageElementId));
-                    result = Convert.ToBoolean(cmd.ExecuteNonQuery());
-                    sqlconnection.Close();
-                }
-            }
-            catch (Exception ex)
-            {
-                string msg = ex.Message.ToString();
-            }
-            return result;
+            ListDictionary param = new ListDictionary();
+            param.Add("BackbonePageElementId", backbonepageelement.BackbonePageElementId);
+            int result = DataAccess.ExecuteSPNonQuery(DataAccess.ConnectionStrings.Ansira, "DeleteBackbonePageElement", param);
+            return Convert.ToBoolean(result);
         }
 
 

@@ -19,6 +19,10 @@ namespace BPAClassLibrary.Model
         public int SerialNo { get; set; }
         public bool IsActive { get; set; }
         public string Value { get; set; }
+        public string CreatedBy { get; set; }
+        public string UpdatedBy { get; set; }
+        public DateTime CreateTs { get; set; }
+        public DateTime UpdateTs { get; set; }
     }
     public class BackbonePageElementIdentifierResponseModel
     {

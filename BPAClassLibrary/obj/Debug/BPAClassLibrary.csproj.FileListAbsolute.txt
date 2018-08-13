@@ -133,6 +133,5 @@ D:\Satish .net\Ansira\TestAnsiraAPI\BPAClassLibrary\bin\Debug\Microsoft.Practice
 D:\Satish .net\Ansira\TestAnsiraAPI\BPAClassLibrary\bin\Debug\SimpleRESTServices.xml
 D:\Satish .net\Ansira\TestAnsiraAPI\BPAClassLibrary\bin\Debug\RestSharp.xml
 D:\Satish .net\Ansira\TestAnsiraAPI\BPAClassLibrary\bin\Debug\ServiceStack.Text.xml
-D:\Satish .net\Ansira\TestAnsiraAPI\BPAClassLibrary\obj\Debug\BPAClassLibrary.csprojResolveAssemblyReference.cache
 D:\Satish .net\Ansira\TestAnsiraAPI\BPAClassLibrary\obj\Debug\BPAClassLibrary.dll
 D:\Satish .net\Ansira\TestAnsiraAPI\BPAClassLibrary\obj\Debug\BPAClassLibrary.pdb

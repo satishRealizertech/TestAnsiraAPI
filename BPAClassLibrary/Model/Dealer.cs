@@ -18,5 +18,13 @@ namespace BPAClassLibrary.Model
         public string OEMName { get; set; }
         public string BackboneName { get; set; }
        public string UpdatedBy { get; set; }
+        public string Zone { get; set; }
+        public string DealerCode { get; set; }
+        public string Region { get; set; }
+
+        public DateTime CreateTs { get; set; }
+        public DateTime UpdateTs { get; set; }
+
+
     }
 }

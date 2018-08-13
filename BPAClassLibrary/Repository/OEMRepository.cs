@@ -10,6 +10,7 @@ using BPAClassLibrary.Interface;
 using BPA.Services;
 using System.Data.SqlClient;
 using System.Configuration;
+using System.Collections.Specialized;
 
 namespace BPAClassLibrary.Repository
 {
@@ -18,112 +19,41 @@ namespace BPAClassLibrary.Repository
     {
         public IList<OEM> GetOEM()
         {
-            List<OEM> oems = new List<OEM>();
-            try
-            {
-                using (var sqlconnection = new SqlConnection(ConfigurationManager.ConnectionStrings["Ansira"].ConnectionString))
-                {
-                    sqlconnection.Open();
-                    SqlCommand cmd = new SqlCommand("GetAllOEMs", sqlconnection);
-                    SqlDataReader sdr = cmd.ExecuteReader();
-                    if (sdr.HasRows)
-                    {
-                        while (sdr.Read())
-                        {
-                            OEM oem_data = new OEM();
-                            oem_data.OEM_Id = Convert.ToInt32(sdr["OEMId"].ToString());
-                            oem_data.OEM_Name = sdr["OEMName"].ToString();
-                            oems.Add(oem_data);
-
-                        }
-                    }
-                    sqlconnection.Close();
-                }
-            }
-            catch (Exception ex)
-            {
-                string message = ex.Message;
-            }
-
-            //DataSet ds = DataAccess.ExecuteSQLSelect(DataAccess.ConnectionStrings.Ansira, "select * from OEM");
-            //DataTable dtBasic = ds.Tables[0];
-            //foreach (DataRow row in dtBasic.Rows)
-            //{
-            //    OEM oem_data = new OEM();
-            //    oem_data.OEM_Id = row.Field<int>("OEMId");
-            //    oem_data.OEM_Name = row.Field<string>("OEMName");
-            //    oems.Add(oem_data);
-            //}
+            List<OEM> oems = DataAccess.ExecuteSPGetList<OEM>(DataAccess.ConnectionStrings.Ansira, "GetAllOEMs");
             return oems;
         }
 
         public bool CreateOEM(OEM OEM_Data)
         {
-            //var result = DataAccess.ExecuteSQLNonQuery(DataAccess.ConnectionStrings.Ansira, "Insert into OEM (OEMName) values (" + OEM_Data.OEM_Name + ")");
-            //return Convert.ToBoolean(result);
-            bool result = false;
-            try
-            {
-                using (var sqlconnection = new SqlConnection(ConfigurationManager.ConnectionStrings["Ansira"].ConnectionString))
-                {
-                    sqlconnection.Open();
-                    SqlCommand cmd = new SqlCommand("('" + OEM_Data.OEM_Name + "')", sqlconnection);
-                    result=Convert.ToBoolean(cmd.ExecuteNonQuery());
-                    sqlconnection.Close();
-                }
-            }
-            catch (Exception ex)
-            {
-                string message = ex.Message;
-            }
-            return true;
+            //List Dictionary object for parameters of Store procedure
+            ListDictionary param = new ListDictionary();
+            param.Add("OEMName", OEM_Data.OEMName);
+            param.Add("CreatedBy", OEM_Data.CreatedBy);
+            param.Add("CreateTs", OEM_Data.CreateTs);
+            var result = DataAccess.ExecuteSPNonQuery(DataAccess.ConnectionStrings.Ansira, "CreateOEM",param);
+            return Convert.ToBoolean(result);
         }
 
-        public bool UpdateOEM(OEM OEM_Data)
+        public bool UpdateOEM(OEM OEMData)
         {
-            //var result = DataAccess.ExecuteSQLNonQuery(DataAccess.ConnectionStrings.Ansira, "Update OEM SET OEMName='"+ OEM_Data.OEM_Name+ "' Where OEMId='" + Convert.ToInt32(OEM_Data.OEM_Id) + "'");
-            //return Convert.ToBoolean(result);
-            bool result = false;
-            try
-            {
-                using (var sqlconnection = new SqlConnection(ConfigurationManager.ConnectionStrings["Ansira"].ConnectionString))
-                {
-                    sqlconnection.Open();
-                    SqlCommand cmd = new SqlCommand("Update OEM SET OEMName = '"+ OEM_Data.OEM_Name+ "' Where OEMId = " + Convert.ToInt32(OEM_Data.OEM_Id) + "",sqlconnection);
-                    result = Convert.ToBoolean(cmd.ExecuteNonQuery());
-                    sqlconnection.Close();
-                }
-            }
-            catch (Exception ex)
-            {
-                string message = ex.Message;
-            }
-            return result;
+            //List Dictionary object for parameters of Store procedure
+            ListDictionary param = new ListDictionary();
+            param.Add("OEMName", OEMData.OEMName);
+            param.Add("OEMId", OEMData.OEMId);
+            param.Add("UpdatedBy", OEMData.UpdatedBy);
+            param.Add("UpdateTs", OEMData.UpdateTs);
+            param.Add("IsActive", OEMData.IsActive);
+            var result = DataAccess.ExecuteSPNonQuery(DataAccess.ConnectionStrings.Ansira, "UpdateOEM", param);
+            return Convert.ToBoolean(result);
         }
 
-        public bool DeleteOEM(OEM OEM_Data)
+        public bool DeleteOEM(OEM OEMData)
         {
-            //var result = DataAccess.ExecuteSQLNonQuery(DataAccess.ConnectionStrings.Ansira, "Delete From OEM Where OEMId='" + Convert.ToInt32(OEM_Data.OEM_Id) + "'");
-            //return Convert.ToBoolean(result);
-
-            bool result = false;
-
-            try
-            {
-                using (var sqlconnection = new SqlConnection(ConfigurationManager.ConnectionStrings["Ansira"].ConnectionString))
-                {
-                    sqlconnection.Open();
-                    SqlCommand cmd = new SqlCommand("Delete From OEM Where OEMId = " + Convert.ToInt32(OEM_Data.OEM_Id) + "",sqlconnection);
-                    result = Convert.ToBoolean(cmd.ExecuteNonQuery());
-                    sqlconnection.Close();
-
-                }
-            }
-            catch (Exception ex)
-            {
-                string message = ex.Message;
-            }
-            return result;
+            //List Dictionary object for parameters of Store procedure
+            ListDictionary param = new ListDictionary();
+            param.Add("OEMId", OEMData.OEMId);
+            var result = DataAccess.ExecuteSPNonQuery(DataAccess.ConnectionStrings.Ansira, "DeleteOEM",param);
+            return Convert.ToBoolean(result);
         }
 
 

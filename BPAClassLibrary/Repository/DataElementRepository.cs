@@ -1,7 +1,9 @@
-﻿using BPAClassLibrary.Interface;
+﻿using BPA.Services;
+using BPAClassLibrary.Interface;
 using BPAClassLibrary.Model;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
@@ -15,100 +17,40 @@ namespace BPAClassLibrary.Repository
         public DataElementResponseModel GetDataElementList()
         {
             DataElementResponseModel response = new DataElementResponseModel();
-            List<DataElement> listDataelement = new List<DataElement>();
-            //DataSet ds = DataAccess.ExecuteSQLGetList<Backbone>(DataAccess.ConnectionStrings.Ansira, "");
-            try
-            {
-                using (var sqlconnection = new SqlConnection(ConfigurationManager.ConnectionStrings["Ansira"].ConnectionString))
-                {
-                    sqlconnection.Open();
-                    SqlCommand cmd = new SqlCommand("GetAllDataElement", sqlconnection);
-                    SqlDataReader sdr = cmd.ExecuteReader();
-                    if (sdr.HasRows)
-                    {
-                        while (sdr.Read())
-                        {
-                            DataElement dataelement = new DataElement();
-                            dataelement.DataElementTypeId = Convert.ToInt32(sdr["DataElementTypeId"].ToString());
-                            dataelement.DataElementName = sdr["DataElementName"].ToString();
-                            listDataelement.Add(dataelement);
-                        }
-                        response.DataElementList = listDataelement;
-                        response.Success = "true";
-                    }
-                    sqlconnection.Close();
-                }
-            }
-            catch (Exception ex)
-            {
-                response.Error = ex.Message;
-                response.Success = "false";
-            }
+            response.DataElementList = DataAccess.ExecuteSQLGetList<DataElement>(DataAccess.ConnectionStrings.Ansira, "GetAllDataElement");
             return response;
+           
         }
 
         public bool CreateDataElement(DataElement dataelement)
         {
-            bool result = false;
-            try
-            {
-                using (var sqlconnection = new SqlConnection(ConfigurationManager.ConnectionStrings["Ansira"].ConnectionString))
-                {
-                    sqlconnection.Open();
-                    SqlCommand cmd = new SqlCommand("Insert into DataElementType (DataElementName) values (@DataElementName)", sqlconnection);
-                    cmd.Parameters.Add(new SqlParameter("@DataElementName", dataelement.DataElementName));
-                    result = Convert.ToBoolean(cmd.ExecuteNonQuery());
-                    sqlconnection.Close();
-                }
-            }
-            catch (Exception ex)
-            {
-                string msg = ex.Message.ToString();
-            }
-            return result;
+
+            ListDictionary param = new ListDictionary();
+            param.Add("DataElementName", dataelement.DataElementName);
+            param.Add("CreatedBy", dataelement.CreatedBy);
+            param.Add("CreateTs", dataelement.CreateTs);
+            int result = DataAccess.ExecuteSPNonQuery(DataAccess.ConnectionStrings.Ansira, "CreateDataElement", param);
+            return Convert.ToBoolean(result);
+
         }
 
         public bool UpdateDataElement(DataElement dataelement)
         {
-            bool result = false;
-            try
-            {
-                using (var sqlconnection = new SqlConnection(ConfigurationManager.ConnectionStrings["Ansira"].ConnectionString))
-                {
-                    sqlconnection.Open();
-                    SqlCommand cmd = new SqlCommand("Update DataElementType set DataElementName=@DataElementName where DataElementTypeId=@DataElementTypeId", sqlconnection);
-                    cmd.Parameters.Add(new SqlParameter("@DataElementName", dataelement.DataElementName));
-                    cmd.Parameters.Add(new SqlParameter("@DataElementTypeId", dataelement.DataElementTypeId));
-                    result = Convert.ToBoolean(cmd.ExecuteNonQuery());
-                    sqlconnection.Close();
-                }
-            }
-            catch (Exception ex)
-            {
-                string msg = ex.Message.ToString();
-            }
-            return result;
+            ListDictionary param = new ListDictionary();
+            param.Add("DataElementTypeId", dataelement.DataElementTypeId);
+            param.Add("DataElementName", dataelement.DataElementName);
+            param.Add("UpdatedBy", dataelement.UpdatedBy);
+            param.Add("UpdateTs", dataelement.UpdateTs);
+            int result = DataAccess.ExecuteSPNonQuery(DataAccess.ConnectionStrings.Ansira, "UpdateDataElement", param);
+            return Convert.ToBoolean(result);
         }
 
         public bool DeleteDataElement(DataElement dataelement)
         {
-            bool result = false;
-            try
-            {
-                using (var sqlconnection = new SqlConnection(ConfigurationManager.ConnectionStrings["Ansira"].ConnectionString))
-                {
-                    sqlconnection.Open();
-                    SqlCommand cmd = new SqlCommand("Delete from DataElementType where DataElementTypeId=@DataElementTypeId", sqlconnection);
-                    cmd.Parameters.Add(new SqlParameter("@DataElementTypeId", dataelement.DataElementTypeId));
-                    result = Convert.ToBoolean(cmd.ExecuteNonQuery());
-                    sqlconnection.Close();
-                }
-            }
-            catch (Exception ex)
-            {
-                string msg = ex.Message.ToString();
-            }
-            return result;
+            ListDictionary param = new ListDictionary();
+            param.Add("DataElementTypeId", dataelement.DataElementTypeId);
+            int result = DataAccess.ExecuteSPNonQuery(DataAccess.ConnectionStrings.Ansira, "DeleteDataElement", param);
+            return Convert.ToBoolean(result);
         }
     }
 }

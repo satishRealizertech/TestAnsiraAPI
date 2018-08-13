@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
@@ -17,211 +18,81 @@ namespace BPAClassLibrary.Repository
         public BackboneResponseModel GetBackboneList()
         {
             BackboneResponseModel response = new BackboneResponseModel();
-            List<Backbone> listBackbone = new List<Backbone>();
-            //DataSet ds = DataAccess.ExecuteSQLGetList<Backbone>(DataAccess.ConnectionStrings.Ansira, "");
-            try
-            {
-                using (var sqlconnection = new SqlConnection(ConfigurationManager.ConnectionStrings["Ansira"].ConnectionString))
-                {
-                    sqlconnection.Open();
-                    SqlCommand cmd = new SqlCommand("GetAllBackbone", sqlconnection);
-                    SqlDataReader sdr = cmd.ExecuteReader();
-                    if (sdr.HasRows)
-                    {
-                        while (sdr.Read())
-                        {
-                            Backbone backbonedata = new Backbone();
-                            backbonedata.BackboneId= Convert.ToInt32(sdr["BackboneId"].ToString());
-                            backbonedata.BackboneName = sdr["BackboneName"].ToString();
-                            listBackbone.Add(backbonedata);
-                        }
-                        response.BackboneList = listBackbone;
-                        response.Success = "true";
-                    }
-                    sqlconnection.Close();
-                }
-            }
-            catch (Exception ex)
-            {
-                response.Error = ex.Message;
-                response.Success = "false";
-            }
+            response.BackboneList = DataAccess.ExecuteSQLGetList<Backbone>(DataAccess.ConnectionStrings.Ansira, "GetAllBackbone");
             return response;
         }
         public bool CreateBackbone(Backbone backbone)
         {
-            bool result=false;
-            try
-            {
-                using (var sqlconnection = new SqlConnection(ConfigurationManager.ConnectionStrings["Ansira"].ConnectionString))
-                {
-                    sqlconnection.Open();
-                    SqlCommand cmd = new SqlCommand("Insert into Backbone (BackboneName) values (@BackboneName)", sqlconnection);
-                    cmd.Parameters.Add(new SqlParameter("@BackboneName", backbone.BackboneName));
-                    result = Convert.ToBoolean(cmd.ExecuteNonQuery());
-                    sqlconnection.Close();
-                }
-            }
-            catch (Exception ex)
-            {
-            }
-            return result;
+            //List Dictionary object for parameters of Store procedure
+            ListDictionary param = new ListDictionary();
+            param.Add("BackboneName", backbone.BackboneName);
+            param.Add("CreatedBy", backbone.CreatedBy);
+            param.Add("CreateTs", backbone.CreateTs);
+            var result = DataAccess.ExecuteSPNonQuery(DataAccess.ConnectionStrings.Ansira, "CreateBackbone", param);
+            return Convert.ToBoolean(result);
         }
         public bool UpdateBackbone(Backbone backbone)
         {
-            bool result = false;
-            try
-            {
-                using (var sqlconnection = new SqlConnection(ConfigurationManager.ConnectionStrings["Ansira"].ConnectionString))
-                {
-                    sqlconnection.Open();
-                    SqlCommand cmd = new SqlCommand("Update Backbone set BackboneName=@BackboneName where BackboneId=@BackboneId", sqlconnection);
-                    cmd.Parameters.Add(new SqlParameter("@BackboneName", backbone.BackboneName));
-                    cmd.Parameters.Add(new SqlParameter("@BackboneId", backbone.BackboneId));
-                    result = Convert.ToBoolean(cmd.ExecuteNonQuery());
-                    sqlconnection.Close();
-                }
-            }
-            catch (Exception ex)
-            {
-            }
-            return result;
+            ListDictionary param = new ListDictionary();
+            param.Add("BackboneName", backbone.BackboneName);
+            param.Add("BackboneId", backbone.BackboneId);
+            param.Add("UpdatedBy", backbone.UpdatedBy);
+            param.Add("UpdateTs", backbone.UpdateTs);
+            param.Add("IsActive", backbone.IsActive);
+            var result = DataAccess.ExecuteSPNonQuery(DataAccess.ConnectionStrings.Ansira, "UpdateBackbone", param);
+            return Convert.ToBoolean(result);
         }
         public bool DeleteBackbone(Backbone backbone)
         {
-            bool result = false;
-            try
-            {
-                using (var sqlconnection = new SqlConnection(ConfigurationManager.ConnectionStrings["Ansira"].ConnectionString))
-                {
-                    sqlconnection.Open();
-                    SqlCommand cmd = new SqlCommand("Delete from Backbone where BackboneId=@BackboneId", sqlconnection);
-                    cmd.Parameters.Add(new SqlParameter("@BackboneId", backbone.BackboneId));
-                    result = Convert.ToBoolean(cmd.ExecuteNonQuery());
-                    sqlconnection.Close();
-                }
-            }
-            catch (Exception ex)
-            {
-                string msg = ex.Message.ToString();
-            }
-            return result;
+            ListDictionary param = new ListDictionary();
+            param.Add("BackboneId", backbone.BackboneId);
+            var result = DataAccess.ExecuteSPNonQuery(DataAccess.ConnectionStrings.Ansira, "DeleteBackbone", param);
+            return Convert.ToBoolean(result);
         }
 
         public List<BackboneIdentifier> GetIdentifiersList()
         {
-            //List<BackboneIdentifier> listBackboneIdentifier = DataAccess.ExecuteSQLGetList<BackboneIdentifier>(DataAccess.ConnectionStrings.Ansira, "select * from BackboneIdentifiers");
-            List<BackboneIdentifier> listBackboneIdentifier = new List<BackboneIdentifier>();
-            try
-            {
-                using (var sqlconnection = new SqlConnection(ConfigurationManager.ConnectionStrings["Ansira"].ConnectionString))
-                {
-                    sqlconnection.Open();
-                    SqlCommand cmd = new SqlCommand("GetAllBackboneIdentifier", sqlconnection);
-                    SqlDataReader sdr = cmd.ExecuteReader();
-                    if (sdr.HasRows)
-                    {
-                        while (sdr.Read())
-                        {
-                            BackboneIdentifier backboneIdentifierdata = new BackboneIdentifier();
-                            backboneIdentifierdata.BackboneId = Convert.ToInt32(sdr["BackboneId"].ToString());
-                            backboneIdentifierdata.BackboneIdentifierId = Convert.ToInt32(sdr["BackboneIdentifierId"]);
-                            backboneIdentifierdata.BackboneName = sdr["BackboneName"].ToString();
-                            backboneIdentifierdata.Type = sdr["Type"].ToString();
-                            backboneIdentifierdata.Value = sdr["Value"].ToString();
-                            backboneIdentifierdata.SerialNo = sdr["SerialNo"].ToString();
-                            backboneIdentifierdata.Identifier = sdr["Identifier"].ToString();
-                            backboneIdentifierdata.IsActive = Convert.ToBoolean(sdr["IsActive"]);
-                            listBackboneIdentifier.Add(backboneIdentifierdata);
-                        }
-                    }
-                    sqlconnection.Close();
-                }
-            }
-            catch (Exception ex)
-            {
-            }
+            List<BackboneIdentifier> listBackboneIdentifier = DataAccess.ExecuteSQLGetList<BackboneIdentifier>(DataAccess.ConnectionStrings.Ansira, "GetAllBackboneIdentifier");
             return listBackboneIdentifier;
         }
 
         public bool CreateBackboneIdentifier(BackboneIdentifier backboneIdentifier)
         {
-            var result = 0;
-            try
-            {
-                using (var sqlconnection = new SqlConnection(ConfigurationManager.ConnectionStrings["Ansira"].ConnectionString))
-                {
-                    sqlconnection.Open();
-                    SqlCommand cmd = new SqlCommand("Insert into BackboneIdentifiers (BackboneId,Type,Identifier,SerialNo,Value,IsActive) values (@BackboneId,@Type,@Identifier,@SerialNo,@Value,@IsActive)", sqlconnection);
-                    cmd.Parameters.Add(new SqlParameter("@BackboneId", backboneIdentifier.BackboneId));
-                    cmd.Parameters.Add(new SqlParameter("@Type", backboneIdentifier.Type));
-                    cmd.Parameters.Add(new SqlParameter("@Identifier", backboneIdentifier.Identifier));
-                    cmd.Parameters.Add(new SqlParameter("@SerialNo", backboneIdentifier.SerialNo));
-                    cmd.Parameters.Add(new SqlParameter("@Value", backboneIdentifier.Value));
-                    //cmd.Parameters.Add(new SqlParameter("@CreatedBy", backboneIdentifier.CreatedBy));
-                    //cmd.Parameters.Add(new SqlParameter("@UpdatedBy", backboneIdentifier.UpdatedBy));
-                    //cmd.Parameters.Add(new SqlParameter("@CreatedTs", backboneIdentifier.CreatedTs));
-                    //cmd.Parameters.Add(new SqlParameter("@UpdatedTs", backboneIdentifier.UpdatedTs));
-                    cmd.Parameters.Add(new SqlParameter("@IsActive", backboneIdentifier.IsActive));
-                    result = cmd.ExecuteNonQuery();
-                    sqlconnection.Close();
-                }
-            }
-            catch (Exception ex)
-            {
-
-            }
+            ListDictionary param = new ListDictionary();
+            param.Add("@BackboneId", backboneIdentifier.BackboneId);
+            param.Add("@Type", backboneIdentifier.Type);
+            param.Add("@Identifier", backboneIdentifier.Identifier);
+            param.Add("@SerialNo", backboneIdentifier.SerialNo);
+            param.Add("@Value", backboneIdentifier.Value);
+            param.Add("@CreatedBy", backboneIdentifier.CreatedBy);
+            param.Add("@CreateTs", backboneIdentifier.CreatedTs);
+            param.Add("@Comment", backboneIdentifier.Comment);
+            var result = DataAccess.ExecuteSPNonQuery(DataAccess.ConnectionStrings.Ansira, "CreateBackboneIdentifiers", param);
             return Convert.ToBoolean(result);
         }
 
         public bool UpdateBackboneIdentifier(BackboneIdentifier backboneIdentifier)
         {
-            bool result = false;
-            try
-            {
-                using (var sqlconnection = new SqlConnection(ConfigurationManager.ConnectionStrings["Ansira"].ConnectionString))
-                {
-                    sqlconnection.Open();
-                    SqlCommand cmd = new SqlCommand("update BackboneIdentifiers set BackboneId=@BackboneId,Type=@Type,Identifier=@Identifier,SerialNo=@SerialNo,Value=@Value,IsActive=@IsActive where BackboneIdentifierId=@BackboneIdentifierId", sqlconnection);
-                    cmd.Parameters.Add(new SqlParameter("@BackboneId", backboneIdentifier.BackboneId));
-                    cmd.Parameters.Add(new SqlParameter("@Type", backboneIdentifier.Type));
-                    cmd.Parameters.Add(new SqlParameter("@Identifier", backboneIdentifier.Identifier));
-                    cmd.Parameters.Add(new SqlParameter("@SerialNo", backboneIdentifier.SerialNo));
-                    cmd.Parameters.Add(new SqlParameter("@Value", backboneIdentifier.Value));
-                    //cmd.Parameters.Add(new SqlParameter("@CreatedBy", backboneIdentifier.CreatedBy));
-                    //cmd.Parameters.Add(new SqlParameter("@UpdatedBy", backboneIdentifier.UpdatedBy));
-                    //cmd.Parameters.Add(new SqlParameter("@CreatedTs", backboneIdentifier.CreatedTs));
-                    //cmd.Parameters.Add(new SqlParameter("@UpdatedTs", backboneIdentifier.UpdatedTs));
-                    cmd.Parameters.Add(new SqlParameter("@IsActive", backboneIdentifier.IsActive));
-                    cmd.Parameters.Add(new SqlParameter("@BackboneIdentifierId", backboneIdentifier.BackboneIdentifierId));
-                    result = Convert.ToBoolean(cmd.ExecuteNonQuery());
-                    sqlconnection.Close();
-                }
-            }
-            catch (Exception ex)
-            {
-
-            }
-            return result;
+            ListDictionary param = new ListDictionary();
+            param.Add("@BackboneIdentifierId", backboneIdentifier.BackboneIdentifierId);
+            param.Add("@BackboneId", backboneIdentifier.BackboneId);
+            param.Add("@Type", backboneIdentifier.Type);
+            param.Add("@Identifier", backboneIdentifier.Identifier);
+            param.Add("@SerialNo", backboneIdentifier.SerialNo);
+            param.Add("@Value", backboneIdentifier.Value);
+            param.Add("@UpdatedBy", backboneIdentifier.UpdatedBy);
+            param.Add("@UpdatedTs", backboneIdentifier.UpdatedTs);
+            param.Add("@Comment", backboneIdentifier.Comment);
+            param.Add("@IsActive", backboneIdentifier.IsActive);
+            var result = DataAccess.ExecuteSPNonQuery(DataAccess.ConnectionStrings.Ansira, "UpdateBackboneIdentifiers", param);
+            return Convert.ToBoolean(result);
         }
         public bool DeleteBackboneIdentifier(BackboneIdentifier backboneIdentifier)
         {
-            bool result = false;
-            try
-            {
-                using (var sqlconnection = new SqlConnection(ConfigurationManager.ConnectionStrings["Ansira"].ConnectionString))
-                {
-                    sqlconnection.Open();
-                    SqlCommand cmd = new SqlCommand("Delete from BackboneIdentifiers where BackboneIdentifierId=@BackboneIdentifierId", sqlconnection);
-                    cmd.Parameters.Add(new SqlParameter("@BackboneIdentifierId", backboneIdentifier.BackboneIdentifierId));
-                    result = Convert.ToBoolean(cmd.ExecuteNonQuery());
-                    sqlconnection.Close();
-                }
-            }
-            catch (Exception ex)
-            {
-            }
-            return result;
+            ListDictionary param = new ListDictionary();
+            param.Add("@BackboneIdentifierId", backboneIdentifier.BackboneIdentifierId);
+            var result = DataAccess.ExecuteSPNonQuery(DataAccess.ConnectionStrings.Ansira, "DeleteBackboneIdentifiers", param);
+            return Convert.ToBoolean(result);
         }
     }
 }

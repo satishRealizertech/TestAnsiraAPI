@@ -10,6 +10,11 @@ namespace BPAClassLibrary.Model
     {
         public int BackboneId { get; set; }
         public string BackboneName { get; set; }
+        public string CreatedBy { get; set; }
+        public string UpdatedBy { get; set; }
+        public DateTime CreateTs { get; set; }
+        public DateTime UpdateTs { get; set; }
+        public bool IsActive { get; set; }
     }
     public class BackboneResponseModel
     {
@@ -31,5 +36,6 @@ namespace BPAClassLibrary.Model
         public DateTime CreatedTs { get; set; }
         public DateTime UpdatedTs { get; set; }
         public bool IsActive { get; set; }
+        public string Comment { get; set; }
     }
 }
