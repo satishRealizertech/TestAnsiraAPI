@@ -153,6 +153,7 @@ E:\Vitthal\BPA.API\BPA.API\bin\MongoDB.Driver.Core.xml
 E:\Vitthal\BPA.API\BPA.API\bin\SimpleRESTServices.xml
 E:\Vitthal\BPA.API\BPA.API\bin\RestSharp.xml
 E:\Vitthal\BPA.API\BPA.API\bin\ServiceStack.Text.xml
+D:\Satish .net\Ansira\TestAnsiraAPI\BPA.API\obj\Debug\BPA.API.csprojResolveAssemblyReference.cache
 D:\Satish .net\Ansira\TestAnsiraAPI\BPA.API\bin\roslyn\csc.exe
 D:\Satish .net\Ansira\TestAnsiraAPI\BPA.API\bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll
 D:\Satish .net\Ansira\TestAnsiraAPI\BPA.API\bin\roslyn\Microsoft.CodeAnalysis.CSharp.dll
@@ -305,6 +306,5 @@ D:\Satish .net\Ansira\TestAnsiraAPI\BPA.API\bin\Microsoft.Practices.ServiceLocat
 D:\Satish .net\Ansira\TestAnsiraAPI\BPA.API\bin\SimpleRESTServices.xml
 D:\Satish .net\Ansira\TestAnsiraAPI\BPA.API\bin\RestSharp.xml
 D:\Satish .net\Ansira\TestAnsiraAPI\BPA.API\bin\ServiceStack.Text.xml
-D:\Satish .net\Ansira\TestAnsiraAPI\BPA.API\obj\Debug\BPA.API.csprojResolveAssemblyReference.cache
 D:\Satish .net\Ansira\TestAnsiraAPI\BPA.API\obj\Debug\BPA.API.dll
 D:\Satish .net\Ansira\TestAnsiraAPI\BPA.API\obj\Debug\BPA.API.pdb

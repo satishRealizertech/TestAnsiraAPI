@@ -34,7 +34,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Data\BPA\Repositories\BPA\BPA.Core\bin\Debug\BPA.Core.dll</HintPath>
     </Reference>
-    <Reference Include="BPA.Database">
+    <Reference Include="BPA.Database, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Data\BPA\Repositories\BPA\BPA.Database\bin\Debug\BPA.Database.dll</HintPath>
     </Reference>
     <Reference Include="BPA.Services, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -57,16 +58,12 @@
     <Compile Include="Interface\IBackbonePageIdentifierRepository.cs" />
     <Compile Include="Interface\IBackboneRepository.cs" />
     <Compile Include="Interface\IDataElementRepository.cs" />
-    <Compile Include="Interface\IDealerRepository.cs" />
-    <Compile Include="Interface\IOEMRepository.cs" />
     <Compile Include="Interface\IPageTypeRepository.cs" />
     <Compile Include="Model\Backbone.cs" />
     <Compile Include="Model\BackbonePageElement.cs" />
     <Compile Include="Model\BackbonePageElementIdentifier.cs" />
     <Compile Include="Model\BackbonePageIdentifier.cs" />
     <Compile Include="Model\DataElement.cs" />
-    <Compile Include="Model\Dealer.cs" />
-    <Compile Include="Model\OEM.cs" />
     <Compile Include="Model\PageAnalysisRequestModel.cs" />
     <Compile Include="Model\PageTypes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -75,8 +72,6 @@
     <Compile Include="Repository\BackbonePageIdentifierRepository.cs" />
     <Compile Include="Repository\BackboneRepository.cs" />
     <Compile Include="Repository\DataElementRepository.cs" />
-    <Compile Include="Repository\DealerRepository.cs" />
-    <Compile Include="Repository\OEMRepository.cs" />
     <Compile Include="Repository\PageTypeRepository.cs" />
   </ItemGroup>
   <ItemGroup />

@@ -22,6 +22,18 @@ namespace BPAClassLibrary.Repository
             return response;    
         }
 
+        public List<Backbone> GetBackbone()
+        {
+            var backbone = DataAccess.ExecuteSPGetList<Backbone>(DataAccess.ConnectionStrings.Ansira, "GetPageBackbone");
+            return backbone;
+        }
+
+        public List<PageTypes> GetBackbonePageType()
+        {
+            var pageType = DataAccess.ExecuteSPGetList<PageTypes>(DataAccess.ConnectionStrings.Ansira, "");
+            return pageType;
+        } 
+
         public bool CreateBackbonePageElement(BackbonePageElement backbonepageelement)
         {
             ListDictionary param = new ListDictionary();

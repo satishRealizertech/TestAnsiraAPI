@@ -44,16 +44,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BPA.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Data\BPA\Repositories\BPA\BPA.Core\bin\Debug\BPA.Core.dll</HintPath>
+    <Reference Include="BPA.Core">
+      <HintPath>C:\Data\BPA\Repositories\BPA\BPA.Services\bin\Debug\BPA.Core.dll</HintPath>
     </Reference>
-    <Reference Include="BPA.Services, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="BPA.Services">
       <HintPath>C:\Data\BPA\Repositories\BPA\BPA.Services\bin\Debug\BPA.Services.dll</HintPath>
     </Reference>
-    <Reference Include="BPAClassLibrary, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="BPAClassLibrary">
       <HintPath>..\BPAClassLibrary\bin\Debug\BPAClassLibrary.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -266,9 +263,7 @@
     <Compile Include="Controllers\BackbonePageElementIdentifierController.cs" />
     <Compile Include="Controllers\BackbonePageIdentifierController.cs" />
     <Compile Include="Controllers\DataElementController.cs" />
-    <Compile Include="Controllers\DealerController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\OEMController.cs" />
     <Compile Include="Controllers\PageAnalysisController.cs" />
     <Compile Include="Controllers\PageTypeController.cs" />
     <Compile Include="Global.asax.cs">

@@ -35,8 +35,6 @@ namespace BPA.API
             kernel.Load(Assembly.GetExecutingAssembly());
 
             // Repository bindings here
-            kernel.Bind<IOEMRepository>().To<OEMRepository>();
-            kernel.Bind<IDealerRepository>().To<DealerRepository>();
             kernel.Bind<IBackboneRepository>().To<BackboneRepository>();
             kernel.Bind<IDataElementRepository>().To<DataElementRepository>();
             kernel.Bind<IBackbonePageElementRepository>().To<BackbonePageElementRepository>();
